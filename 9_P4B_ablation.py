@@ -119,7 +119,7 @@ if __name__ == "__main__":
     hp_opt.start_ray()
     
     hp_opt.optimize(resources_per_trial={"gpu": 1},
-                    num_samples=6,
+                    num_samples=7,
                     config=search_space,
                     metric='_rmse',
                     mode='min',

@@ -96,7 +96,7 @@ if __name__ == "__main__":
         'dl': tune.grid_search(list(dict_dls_fransys.keys())),
         'model': 'nargru',
         'size': tune.grid_search(['small','medium','large']),
-        'schedule_pred':True, #tune.grid_search([True,False]),
+        'schedule_pred':tune.grid_search([True,False]),
         'pct_start': 0.2,
         'n_epoch': 100
     }

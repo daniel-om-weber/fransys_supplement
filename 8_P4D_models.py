@@ -107,14 +107,10 @@ if __name__ == "__main__":
     hp_opt.start_ray()
     search_space = {
 
-        #'pred_sz': tune.grid_search([60,100,200,300,500]),
-        #'dl': tune.grid_search(list(dict_dls_fransys.keys())),
-        #'model': tune.grid_search(['argru_init','argru_washout']),
-        #'size': tune.grid_search(['small','medium','large']),
-        'pred_sz': tune.grid_search([500]),
-        'dl': 'Ship',
-        'model': tune.grid_search(['argru_washout']),
-        'size': tune.grid_search(['large']),
+        'pred_sz': tune.grid_search([60,100,200,300,500]),
+        'dl': tune.grid_search(list(dict_dls_fransys.keys())),
+        'model': tune.grid_search(['argru_init','argru_washout']),
+        'size': tune.grid_search(['small','medium','large']),
         
         'schedule_pred': False,
         'pct_start': 0.2,

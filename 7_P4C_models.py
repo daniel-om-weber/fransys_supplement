@@ -112,7 +112,7 @@ if __name__ == "__main__":
     hp_opt = HPOptimizer(create_lrn,None)
     hp_opt.start_ray()
     search_space = {
-        'ablation':tune.grid_search([1,2]),#0,#tune.grid_search(list(range(3+1))),
+        'ablation':tune.grid_search([0,1,2]),
         'with_state_sync': tune.sample_from(lambda config: ((config['ablation'] == 1) or ((config['ablation'] == 0) and configs_4c[config_id(config)]['with_state_sync']))),
         'with_diag_loss': tune.sample_from(lambda config: ((config['ablation'] == 2) or ((config['ablation'] == 0) and configs_4c[config_id(config)]['with_diag_loss']))),
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
         'dl': tune.grid_search(list(dict_dls_fransys.keys())),
         'model': 'nargru',
         'size': tune.grid_search(['small','medium','large']),
-        'schedule_pred': False,#tune.grid_search([False,True]),
+        'schedule_pred': tune.grid_search([False,True]),
         'pct_start': 0.2,
         'n_epoch': 100
     }
