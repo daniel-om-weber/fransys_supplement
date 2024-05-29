@@ -81,7 +81,7 @@ if __name__ == "__main__":
         lrn.add_cb(TbpttResetCB())
         return lrn
 
-    models = ['nargru']#['nargru','argru_washout','argru_init']
+    models = ['nargru','argru_washout','argru_init']
     sizes =['small','medium','large']
     dls = list(dict_dls_fransys.keys())
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
                 
                 from ray.tune.schedulers import AsyncHyperBandScheduler
                 scheduler = AsyncHyperBandScheduler(grace_period=8, max_t=100)
-                hp_opt.optimize(resources_per_trial={"gpu": 1/3 if model == 'argru_washout' else 1/2},
+                hp_opt.optimize(resources_per_trial={"gpu": 1/3 if model == 'argru_washout' else 1/2},#maximize gpu utilization for argru_washout
                                 num_samples=-1,
                                 time_budget_s=time_h*60*60,
                                 config=search_space,

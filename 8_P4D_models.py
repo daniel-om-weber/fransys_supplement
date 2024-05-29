@@ -119,7 +119,7 @@ if __name__ == "__main__":
     update_search_space(search_space,configs_4a)
     
     hp_opt.optimize(resources_per_trial={"gpu": 1 },
-                    num_samples=1,
+                    num_samples=7,
                     config=search_space,
                     metric='_rmse',
                     mode='min',

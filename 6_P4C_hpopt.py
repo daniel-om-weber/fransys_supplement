@@ -114,7 +114,6 @@ if __name__ == "__main__":
             search_space.setdefault(key, tune.sample_from(partial(__inner,key=key)))
 
     configs_4a = pickle.load(open('configs_4A.p', 'rb'))
-    #configs_4b = pickle.load(open('configs_4B.p', 'rb'))
 
     sizes = ['small','medium','large']
     for size in sizes:
@@ -147,7 +146,6 @@ if __name__ == "__main__":
             }
     
             update_search_space(search_space,configs_4a,lambda config:tuple([config['dl'],config['model'],config['size']]))
-            #update_search_space(search_space,configs_4b,lambda config:tuple([config['dl'],config['model'],config['size']]))
         
             from ray.tune.schedulers import AsyncHyperBandScheduler
             scheduler = AsyncHyperBandScheduler(grace_period=16, max_t=100)

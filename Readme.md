@@ -1,5 +1,6 @@
 # FranSys: A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction
 This repository contains the code to recreate the experiments of the paper "FranSys - A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction" by Daniel O.M. Weber, Clemens Gühmann, and Thomas Seel.
+Additionally to the code we also provide a [pre-built Docker image](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers), which reproduces the experimental environment, with code, dependencies, and datasets independently from changes of any software versions or package managers.
 
 ## Abstract
 Neural network-based non-linear system identification is a promising approach for various multi-step-ahead prediction tasks, such as model predictive control and digital twins, where the relevant system dynamics are unknown or difficult to model. These tasks often require models that are not only accurate but also fast to train and use. Although current state-of-the-art neural network-based system identification methods can identify accurate models, they are too slow when scaled large enough for high accuracy.
@@ -11,9 +12,45 @@ For more details, please refer to our paper: [link to the paper or arXiv preprin
 
 ## Installation
 
-This project uses a custom library called `seqdata`, which is built on top of PyTorch and fastai for processing sequential data. To install the required dependencies and set up the environment, you have two options:
+This project uses our custom library called `seqdata`, which is built on top of PyTorch and fastai for processing sequential data. To install the required dependencies and set up the environment, you can either use a container or you can install the software in your own python environment. For optimal reproducability we recommend to use the [pre-built image from Docker Hub](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers).
 
-### Option 1: Using conda and pip
+### Option 1: Using Docker or Singularity
+
+If you prefer to use containerization, you can either build the Docker image using the provided Dockerfile or use the [pre-built image from Docker Hub](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers):
+
+#### Using the pre-built Docker image
+Pull the pre-built image from Docker Hub:
+```
+docker pull pheenix/fransys_supplement:submitted
+```
+
+To run the container with Jupyter Lab, use the following command:
+```
+docker run -it --rm -p 8888:8888 -v /path/to/local/data:$HOME/local_data pheenix/fransys_supplement:submitted
+```
+
+Replace `/path/to/local/data` with the path to your local data directory. This directory will be mounted inside the container at `$HOME/local_data`, allowing you to access your local data files.
+
+The container will start Jupyter Lab, which you can access by opening the provided URL in your web browser.
+
+
+#### Building the Docker image
+If you prefer to build the docker image yourself, you can use the provided Dockerfile:
+
+1. Clone this repository and navigate to the project directory:
+   ```
+   git clone https://github.com/yourusername/fransys.git
+   cd fransys
+   ```
+
+2. Build the Docker image:
+   ```
+   docker build -t fransys .
+   ```
+
+
+
+### Option 2: Using conda and pip
 
 1. Make sure you have conda installed on your system. If not, you can download and install Miniconda from the official website: [https://docs.conda.io/en/latest/miniconda.html](https://docs.conda.io/en/latest/miniconda.html)
 
@@ -34,36 +71,7 @@ This project uses a custom library called `seqdata`, which is built on top of Py
    pip install seqdata/. rarfile easyDataverse
    ```
 
-### Option 2: Using Docker or Singularity
-
-If you prefer to use containerization, you can either build the Docker image using the provided Dockerfile or use the pre-built image from Docker Hub.
-
-#### Building the Docker image
-1. Clone this repository and navigate to the project directory:
-   ```
-   git clone https://github.com/yourusername/fransys.git
-   cd fransys
-   ```
-
-2. Build the Docker image:
-   ```
-   docker build -t fransys .
-   ```
-
-#### Using the pre-built Docker image
-Pull the pre-built image from Docker Hub:
-```
-docker pull pheenix/fransys_supplement:submitted
-```
-
-To run the container with Jupyter Lab, use the following command:
-```
-docker run -it --rm -p 8888:8888 -v /path/to/local/data:$HOME/local_data pheenix/fransys_supplement:submitted
-```
-
-Replace `/path/to/local/data` with the path to your local data directory. This directory will be mounted inside the container at `$HOME/local_data`, allowing you to access your local data files.
-
-The container will start Jupyter Lab, which you can access by opening the provided URL in your web browser.
+If steps of the installation are unclear, you can check the installation commands in the Dockerfile.
 
 
 ## Dataset Preparation
@@ -75,13 +83,13 @@ The code in this repository uses three publicly available benchmark datasets:
 
 The dataset preparation script `0_prepare_datasets.py` automatically downloads and preprocesses these datasets. If you are using the provided Dockerfile or the pre-built Docker image, the datasets are already prepared inside the container in the `$HOME/local_data` directory.
 
-### Ship Maneuvering Dataset (SHIP/SHIP-OOD)
+### [Ship Maneuvering Dataset (SHIP/SHIP-OOD)](https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/darus-2905)
 The Ship Maneuvering Dataset consists of simulated ship maneuvering data with environmental disturbances. It includes input signals such as propeller speed, wind speed, and rudder angles, and output signals like linear and angular velocities, roll angle, and wind attack angle. The dataset is split into training, validation, and two test sets (SHIP and SHIP-OOD, with the latter having different input and state distributions).
 
-### Quadrotor Dataset (QUAD)
+### [Quadrotor Dataset (QUAD)](https://github.com/wavelab/pelican_dataset)
 The Quadrotor Dataset contains real-world flight data from a quadrocopter equipped with a motion capture system. The input signals are the four motor rotation speeds, and the output signals include linear and angular velocities. The dataset is split into contiguous subsets for training, validation, and testing.
 
-### Industrial Robot Dataset (ROBOT)
+### [Industrial Robot Dataset (ROBOT)](https://kluedo.ub.rptu.de/frontdoor/index/index/docId/7284)
 The Industrial Robot Dataset features data from a real industrial robotic arm with six joints. The dataset provides both forward and inverse kinematics scenarios, with motor torques as input signals and joint angles as output signals. Due to the relatively short length of the dataset compared to the system complexity, it is prone to overfitting.
 
 If you are running the code outside the container, make sure to execute the `0_prepare_datasets.py` script to download and preprocess the datasets before running the experiments.
@@ -126,11 +134,9 @@ To reproduce the experiments, follow the installation instructions and ensure th
 
 Please note that the hyperparameter optimization scripts may take a long time to complete, depending on your computational resources. We parallelize these tasks using the Ray library to speed up the process. The provided configuration files contain the hyperparameters used in the paper, so you can directly use them to train the models and generate the plots.
 
-## License
-This project is licensed under the Creative Commons Attribution (CC BY) 4.0 License. See the `LICENSE` file for more information.
 
 ## Citation
-If you use FranSys, the benchmark datasets, or the code from this repository in your research, please cite our paper:
+If you use FranSys, the prepared benchmark datasets, or the code from this repository in your research, please cite our paper:
 
 ```bibtex
 @article{weber2024fransys,
