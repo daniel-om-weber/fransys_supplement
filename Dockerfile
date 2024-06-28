@@ -1,5 +1,4 @@
-# Use the official Miniconda base image
-FROM python:3.10-alpine
+FROM python:3.10
 
 # Set the working directory
 WORKDIR /workspace
@@ -7,8 +6,12 @@ WORKDIR /workspace
 # Copy your project files
 COPY . /workspace
 
+#install tinytex, a small latex distribution
+RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
+
 #install the library
-RUN pip install seqdata/. jupyterlab h5py ipympl seaborn rarfile easyDataverse
+RUN pip install seqdata/. jupyterlab h5py ipympl seaborn rarfile easyDataverse --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cu117
+
 
 #prepare datasets in container in /local_data for easy access
 RUN python 0_prepare_datasets.py
