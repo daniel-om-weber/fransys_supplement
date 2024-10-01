@@ -1,24 +1,24 @@
 # FranSys: A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction
-This repository contains the code to recreate the experiments of the paper "FranSys - A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction" by Daniel O.M. Weber, Clemens Gühmann, and Thomas Seel.
-Additionally to the code we also provide a [pre-built Docker image](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers), which reproduces the experimental environment, with code, dependencies, and datasets independently from changes of any software versions or package managers.
+This repository contains the code to recreate the experiments in the paper "FranSys - A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction" by Daniel O.M. Weber, Clemens Gühmann, and Thomas Seel.
+In addition to the code, we also provide a [pre-built Docker image](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers), which reproduces the experimental environment with code, dependencies, and datasets independently from changes of any software versions or package managers.
 
 ## Abstract
-Neural network-based non-linear system identification is a promising approach for various multi-step-ahead prediction tasks, such as model predictive control and digital twins, where the relevant system dynamics are unknown or difficult to model. These tasks often require models that are not only accurate but also fast to train and use. Although current state-of-the-art neural network-based system identification methods can identify accurate models, they are too slow when scaled large enough for high accuracy.
-We propose FranSys, a fast, non-autoregressive recurrent neural network (RNN) for multi-step ahead prediction. FranSys comprises three key components: (1) a non-autoregressive RNN model structure that enables faster training and inference compared to autoregressive RNNs, (2) a state distribution alignment technique that improves generalizability, and (3) a prediction horizon scheduling method that accelerates training by gradually increasing the prediction horizon during the training process.
-We evaluate FranSys on three publicly available benchmark datasets, comparing its speed and accuracy against state-of-the-art RNN-based multi-step ahead prediction methods. The evaluation includes various prediction horizons, model sizes, and hyperparameter optimization settings, using both our own implementations and those from related work. 
-Results show that FranSys is 10 to 100 times faster and significantly more accurate than state-of-the-art RNN-based multi-step ahead prediction methods, especially with long prediction horizons.
-This substantial speed improvement enables, for the first time, the application of neural network-based models in time-critical tasks, such as model predictive control and online learning of digital twins on resource-constrained systems with practical model sizes.
+Neural network-based nonlinear system identification is crucial for various multi-step ahead prediction tasks, including model predictive control and digital twins. These applications demand models that are not only accurate but also efficient in training and deployment. While current state-of-the-art neural network-based methods can identify accurate models, they often become prohibitively slow when scaled to achieve high accuracy, limiting their use in resource-constrained or time-critical applications.
+We propose FranSys, a Fast recurrent neural network-based method for multi-step ahead prediction in non-autoregressive System Identification. FranSys comprises three key innovations: (1) the first non-autoregressive RNN model structure for multi-step ahead prediction that enables much faster training and inference compared to autoregressive RNNs by separating state estimation and prediction into two specialized sub-models, (2) a state distribution alignment training technique that enhances generalizability and (3) a prediction horizon scheduling method that accelerates training by progressively increasing the prediction horizon.
+We evaluate FranSys on three publicly available benchmark datasets representing diverse systems, comparing its speed and accuracy against state-of-the-art RNN-based multi-step ahead prediction methods. The evaluation includes various prediction horizons, model sizes, and hyperparameter optimization settings, using both our own implementations and those from related work.
+Results demonstrate that FranSys is 10 to 100 times faster in training and inference with the same and often higher accuracy on test data than state-of-the-art RNN-based multi-step ahead prediction methods, particularly with long prediction horizons. This substantial speed improvement enables the application of larger neural network-based models with longer prediction horizons on resource-constrained systems in time-critical tasks, such as model predictive control and online learning of digital twins.
+
 For more details, please refer to our paper: [link to the paper or arXiv preprint]
 
 ## Installation
 
-This project uses our custom library called `seqdata`, which is built on top of PyTorch and fastai for processing sequential data. To install the required dependencies and set up the environment, you can either use a container or you can install the software in your own python environment. For optimal reproducability we recommend to use the [pre-built image from Docker Hub](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers).
+This project uses our custom library called `seqdata`(further developed with the name `tsfast`), which is built on top of PyTorch and fastai for processing sequential data. To install the required dependencies and set up the environment, you can either use a container or install the software in your Python environment. For optimal reproducibility we recommend to use the [pre-built image from Docker Hub](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers).
 
 ### Option 1: Using Docker or Singularity
 
 If you prefer to use containerization, you can either build the Docker image using the provided Dockerfile or use the [pre-built image from Docker Hub](https://hub.docker.com/layers/pheenix/fransys_supplement/submission/images/sha256-7f69a6828aa79a6f19a5031134628ebe78ae32a8bb95e1b4da413c0395a345d2?tab=layers):
 
-#### Using the pre-built Docker image
+#### Using the pre-built Docker image with Docker
 Pull the pre-built image from Docker Hub:
 ```
 docker pull pheenix/fransys_supplement:submitted
@@ -33,45 +33,52 @@ Replace `/path/to/local/data` with the path to your local data directory. This d
 
 The container will start Jupyter Lab, which you can access by opening the provided URL in your web browser.
 
+#### Using the pre-built Docker image with Singularity
+Singularity can be used similarly with the following command:
+```  
+singularity run --cwd=/workspace --nv docker://pheenix/fransys_supplement:submission
+```
+Note that Singularity does not encapsulate the host's filesystem. 
 
 #### Building the Docker image
 If you prefer to build the docker image yourself, you can use the provided Dockerfile:
 
 1. Clone this repository and navigate to the project directory:
-   ```
-   git clone https://github.com/yourusername/fransys.git
-   cd fransys
-   ```
+ ```
+ git clone https://github.com/daniel-om-weber/fransys_supplement.git
+ cd fransys_supplement
+ ```
 
 2. Build the Docker image:
-   ```
-   docker build -t fransys .
-   ```
+ ```
+ docker build -t fransys_supplement .
+ ```
 
 
 
-### Option 2: Using conda and pip
+### Option 2: Using pip
 
-1. Make sure you have conda installed on your system. If not, you can download and install Miniconda from the official website: [https://docs.conda.io/en/latest/miniconda.html](https://docs.conda.io/en/latest/miniconda.html)
+1. Clone this repository and navigate to the project directory:
+ ```
+ git clone https://github.com/daniel-om-weber/fransys_supplement.git
+ cd fransys_supplement
+ ```
 
-2. Clone this repository and navigate to the project directory:
-   ```
-   git clone https://github.com/yourusername/fransys.git
-   cd fransys
-   ```
+2. (Optional) Create and activate the conda environment:
+ It is recommended that the packages be installed in their own virtual environment. This can be created and managed with conda. 
+ Make sure you have conda installed on your system. If not, you can download and install Miniconda from the official website: [https://docs.conda.io/en/latest/miniconda.html](https://docs.conda.io/en/latest/miniconda.html)
 
-3. Create and activate the conda environment using the provided `environment.yml` file:
-   ```
-   conda env create -f environment.yml
-   conda activate env_fastai
-   ```
+ ```
+ conda create --name env_fransys python=3.10
+ conda activate env_fransys
+ ```
 
-4. Install the `seqdata` library and additional dependencies:
-   ```
-   pip install seqdata/. rarfile easyDataverse
-   ```
+3. Install the `seqdata` library and additional dependencies:
+ ```
+ pip install seqdata/. jupyterlab h5py ipympl seaborn rarfile easyDataverse
+ ```
 
-If steps of the installation are unclear, you can check the installation commands in the Dockerfile.
+If any installation steps are unclear, you can check the installation commands in the Dockerfile.
 
 
 ## Dataset Preparation
