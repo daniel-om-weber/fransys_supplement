@@ -8,7 +8,7 @@ We propose FranSys, a Fast recurrent neural network-based method for multi-step 
 We evaluate FranSys on three publicly available benchmark datasets representing diverse systems, comparing its speed and accuracy against state-of-the-art RNN-based multi-step ahead prediction methods. The evaluation includes various prediction horizons, model sizes, and hyperparameter optimization settings, using both our own implementations and those from related work.
 Results demonstrate that FranSys is 10 to 100 times faster in training and inference with the same and often higher accuracy on test data than state-of-the-art RNN-based multi-step ahead prediction methods, particularly with long prediction horizons. This substantial speed improvement enables the application of larger neural network-based models with longer prediction horizons on resource-constrained systems in time-critical tasks, such as model predictive control and online learning of digital twins.
 
-For more details, please refer to our paper: [link to the paper or arXiv preprint]
+For more details, please refer to our paper: https://doi.org/10.1109/ACCESS.2024.3473014
 
 ## Installation
 
@@ -146,10 +146,14 @@ Please note that the hyperparameter optimization scripts may take a long time to
 If you use FranSys, the prepared benchmark datasets, or the code from this repository in your research, please cite our paper:
 
 ```bibtex
-@article{weber2024fransys,
-  title={FranSys - A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction},
+@ARTICLE{weber2024fransys,
   author={Weber, Daniel O.M. and Gühmann, Clemens and Seel, Thomas},
-  journal={arXiv preprint arXiv:2024.XXXXX},
-  year={2023}
+  journal={IEEE Access}, 
+  title={FranSys - A Fast Non-Autoregressive Recurrent Neural Network for Multi-Step Ahead Prediction}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-1},
+  doi={10.1109/ACCESS.2024.3473014}}
 }
 ```
